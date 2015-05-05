@@ -28,13 +28,6 @@ class Frames(object):
         
     def __str__(self):
         return "Material: {}, Weight: {}, Cost: {}".format(self.material, self.weight, self.cost)
-
-# class Bicycle(object):
-#     """Bicycle have a model name, weight, and cost to produce"""
-#     def __init__(self, model, weight, cost):
-#         self.model = model
-#         self.weight = weight
-#         self.cost = cost
         
 class Bicycle(object):
     """Bicycle have a model name, weight, and cost to produce"""
