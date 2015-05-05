@@ -8,7 +8,7 @@ class Wheels(object):
     Wheels have a model name, weight, and a cost to produce.
     There should be a total of three different wheel types
     """
-    def __init__(self, model, weight, cost):
+    def __init__(self, model=None, weight=None, cost=None):
         self.model = model
         self.weight = weight
         self.cost = cost
@@ -20,7 +20,7 @@ class Frames(object):
     """
     Frames can be made of aluminum, carbon, or steel, have a weight and a cost to produce
     """
-    def __init__(self, weight, cost):
+    def __init__(self, weight=None, cost=None):
         materials = ['aluminum', 'carbon', 'steel']
         self.material = random.choice(materials)
         self.weight = weight
@@ -31,7 +31,7 @@ class Frames(object):
         
 class Bicycle(object):
     """Bicycle have a model name, weight, and cost to produce"""
-    def __init__(self, model, wheel, frame):
+    def __init__(self, model=None, wheel=None, frame=None):
         self.model = model
         self.wheel = wheel
         self.frame = frame
