@@ -22,7 +22,7 @@ class BikeShops(object):
         self.name = name
         self.inventory = {}
         self.margin = 0.20
-        self.bikes_sold = {}
+        self.total_profit = 0
         
     def give_quote(self, customer):
         """Creates quote on bicycles in stock within customer's budget."""
@@ -30,24 +30,27 @@ class BikeShops(object):
         print(customer)
         #bike_quote = []
         for bike in self.inventory:
-            retail_price = bike.cost+(bike.cost*self.margin)
-            if retail_price < customer.money:
+            retail = self.retail_price(bike)
+            if retail < customer.money:
                 #bike_quote.append(bike)
-                print("Model: {}, Weight: {}, Retail Price: {}".format(bike.model, bike.weight, retail_price))
+                print("Model: {}, Weight: {}, Retail Price: {}".format(bike.model, bike.weight, retail))
         #return bike_quote
         #return "{}".format('\n'.join([str(bike) for bike in bike_quote]))
         
-    def add_inventory(self, bike, quantity=1):
+    def add_inventory(self, bike, quantity=10):
         self.inventory[bike] = quantity
+        
+    def retail_price(self, bike):
+        return bike.cost+(bike.cost*self.margin)
         
     def __str__(self):
         #return "{}".format('\n'.join([str(bike) for bike in self.inventory]))
 #        return "{}".format("\n".join([str(bike), qty for bike, qty in self.inventory.items()]))
-        return "\n".join(["{} ({})".format(str(bike), self.inventory[bike]) for bike in self.inventory])
+        return "\n".join(["{}, Quantity: {}".format(str(bike), self.inventory[bike]) for bike in self.inventory])
         
     def profit(self):
         """Create a dictionary for this with bicycles and profits."""
-        pass
+        return "Our total profit is now {}.".format(str(self.total_profit))
     
 class Customers(object):
     def __init__(self, name, money):
@@ -59,26 +62,39 @@ class Customers(object):
     def __str__(self):
         return "Customer Name: {}, Budget: {}".format(self.name, self.money)       
         
-    def buy_bike(self):
-        """Create a function that add a bike to bikes_owned and subtracts money."""
-        pass
+    def buy_bike(self, bikeshop, bike):
+        """Create a method that add a bike to bikes_owned and subtracts money."""
+        """Method should also add profit and decrease inventory to the bike shop."""
+        retail = bikeshop.retail_price(bike)
+        if retail < self.money:
+            self.money = self.money - retail
+            self.bikes_owned.append(bike)
+            bikeshop.inventory[bike] -= 1
+            bikeshop.total_profit += bike.cost*bikeshop.margin
+            print("Thanks for purchasing the {} bicycle, {}!\nThe bike cost you {} and you have {} left in your bicycle fund."
+                  .format(bike.model, self.name, retail, self.money))
+        else:
+            print("Sorry! You can't afford this bike.")
         
-if __name__ == '__main__':
-    cruiser = Bicycle("Cruiser", 17, 100)
-    beach_bum = Bicycle("Beach Bum", 18, 150)
-    city_slicker = Bicycle("City Slicker", 17, 425)
-    bruiser = Bicycle("Bruiser", 19, 475)
-    xtreme = Bicycle("Xtreme", 20, 800)
-    mad_max = Bicycle("Mad Max", 18, 850)
-    royalbikes = BikeShops("Royal Bikes")
-    bike_list = [cruiser, beach_bum, city_slicker, bruiser, xtreme, mad_max]
-    for bike in bike_list:
-        royalbikes.add_inventory(bike)
-    print(royalbikes)
-    curly = Customers("Curly", 200)
-    larry = Customers("Larry", 500)
-    moe = Customers("Moe", 1000)
-    royalbikes.give_quote(curly)
-    
-    
-    
+           
+# if __name__ == '__main__':
+#     cruiser = Bicycle("Cruiser", 17, 100)
+#     beach_bum = Bicycle("Beach Bum", 18, 150)
+#     city_slicker = Bicycle("City Slicker", 17, 380)
+#     bruiser = Bicycle("Bruiser", 19, 400)
+#     xtreme = Bicycle("Xtreme", 20, 750)
+#     mad_max = Bicycle("Mad Max", 18, 780)
+#     royalbikes = BikeShops("Royal Bikes")
+#     bike_list = [cruiser, beach_bum, city_slicker, bruiser, xtreme, mad_max]
+#     for bike in bike_list:
+#         royalbikes.add_inventory(bike)
+#     print(royalbikes)
+#     curly = Customers("Curly", 200)
+#     larry = Customers("Larry", 500)
+#     moe = Customers("Moe", 1000)
+#     royalbikes.give_quote(curly)
+#     curly.buy_bike(royalbikes, cruiser)
+#     larry.buy_bike(royalbikes, city_slicker)
+#     moe.buy_bike(royalbikes, mad_max)
+#     print(royalbikes)
+#     print(royalbikes.profit())
