@@ -16,6 +16,7 @@ class BikeManufacturers(object):
         return self.name
     
     def print_details(self):
+        """Prints out details nicely."""
         print "Bike Manufacturer: {}, Margin: {}".format(self.name, self.margin)
 
 class Wheels(object):
@@ -81,10 +82,12 @@ class BikeShops(object):
                 print("Model: {}, Manufacturer: {}, Weight: {}, Retail Price: {}".format(bike.model, bike. manufacturer, bike.weight, retail))
         
     def add_inventory(self, bike, quantity=10):
+        """Adds inventory to the bike shop."""
         self.inventory[bike] = quantity
         self.budget -= bike.cost * quantity
         
     def retail_price(self, bike):
+        """Calculates the retail price by adding the bike shop margin."""
         return bike.cost+(bike.cost*self.margin)
         
     def __str__(self):
@@ -100,6 +103,7 @@ class BikeShops(object):
         print "Our total profit is now {}.".format(str(self.total_profit))
     
     def budget_details(self):
+        """Prints out budget report nicely."""
         print "Our budget to buy bikes wholesale is now {}.".format(str(self.budget))
     
 class Customers(object):
