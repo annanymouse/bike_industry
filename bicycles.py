@@ -20,7 +20,7 @@ class BikeShops(object):
     """
     def __init__(self, name):
         self.name = name
-        self.inventory = []
+        self.inventory = {}
         self.margin = 0.20
         self.bikes_sold = {}
         
@@ -37,11 +37,13 @@ class BikeShops(object):
         #return bike_quote
         #return "{}".format('\n'.join([str(bike) for bike in bike_quote]))
         
-    def add_inventory(self, bike):
-        self.inventory.append(bike)
+    def add_inventory(self, bike, quantity=1):
+        self.inventory[bike] = quantity
         
     def __str__(self):
-        return "{}".format('\n'.join([str(bike) for bike in self.inventory]))
+        #return "{}".format('\n'.join([str(bike) for bike in self.inventory]))
+#        return "{}".format("\n".join([str(bike), qty for bike, qty in self.inventory.items()]))
+        return "\n".join(["{} ({})".format(str(bike), self.inventory[bike]) for bike in self.inventory])
         
     def profit(self):
         """Create a dictionary for this with bicycles and profits."""
@@ -76,7 +78,7 @@ if __name__ == '__main__':
     curly = Customers("Curly", 200)
     larry = Customers("Larry", 500)
     moe = Customers("Moe", 1000)
-    print(royalbikes.give_quote(curly))
+    royalbikes.give_quote(curly)
     
     
     
