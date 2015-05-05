@@ -3,6 +3,21 @@ Modeling the Bicycle Industry
 """
 import random
 
+class BikeManufacturers(object):
+    """
+    Bike manufacturers have a name, produce 3 models of bikes each, 
+    and have a percentage over cost they sell bikes at to shops.
+    """
+    def __init__(self, name, margin):
+        self.name = name
+        self.margin = margin
+        
+    def __str__(self):
+        return self.name
+    
+    def print_details(self):
+        print "Bike Manufacturer: {}, Margin: {}".format(self.name, self.margin)
+
 class Wheels(object):
     """
     Wheels have a model name, weight, and a cost to produce.
@@ -31,15 +46,17 @@ class Frames(object):
         
 class Bicycle(object):
     """Bicycle have a model name, weight, and cost to produce"""
-    def __init__(self, model=None, wheel=None, frame=None):
+    def __init__(self, model=None, wheel=None, frame=None, manufacturer=None):
+        bike_cost = frame.cost + (wheel.cost*2)
         self.model = model
         self.wheel = wheel
         self.frame = frame
+        self.manufacturer = manufacturer
         self.weight = frame.weight + (wheel.weight*2)
-        self.cost = frame.cost + (wheel.cost*2)
+        self.cost = bike_cost + (bike_cost * manufacturer.margin)
         
     def __str__(self):
-        return "Model: {}, Weight: {}, Cost: {}".format(self.model, self.weight, self.cost)
+        return "Model: {}, Weight: {}, Cost: {}, Manufacturer: {}".format(self.model, self.weight, self.cost, self.manufacturer)
       
 class BikeShops(object):
     """
@@ -47,8 +64,9 @@ class BikeShops(object):
     sell bicycles with a margin over their cost, and
     can see how much profit they have made from selling bikes.
     """
-    def __init__(self, name):
+    def __init__(self, name, budget):
         self.name = name
+        self.budget = budget
         self.inventory = {}
         self.margin = 0.20
         self.total_profit = 0
@@ -60,21 +78,29 @@ class BikeShops(object):
         for bike in self.inventory:
             retail = self.retail_price(bike)
             if retail < customer.money:
-                print("Model: {}, Weight: {}, Retail Price: {}".format(bike.model, bike.weight, retail))
+                print("Model: {}, Manufacturer: {}, Weight: {}, Retail Price: {}".format(bike.model, bike. manufacturer, bike.weight, retail))
         
     def add_inventory(self, bike, quantity=10):
         self.inventory[bike] = quantity
+        self.budget -= bike.cost * quantity
         
     def retail_price(self, bike):
         return bike.cost+(bike.cost*self.margin)
         
     def __str__(self):
+        """Basic String Output"""
+        return self.name
+    
+    def print_inventory(self):
         """Print the inventory nicely."""
-        return "\n".join(["{}, Quantity: {}".format(str(bike), self.inventory[bike]) for bike in self.inventory])
+        print "{}\n".format(self.name).upper() + "\n".join(["{}, Quantity: {}".format(str(bike), self.inventory[bike]) for bike in self.inventory])
         
     def profit(self):
         """Create a dictionary for this with bicycles and profits."""
-        return "Our total profit is now {}.".format(str(self.total_profit))
+        print "Our total profit is now {}.".format(str(self.total_profit))
+    
+    def budget_details(self):
+        print "Our budget to buy bikes wholesale is now {}.".format(str(self.budget))
     
 class Customers(object):
     def __init__(self, name, money):
@@ -95,7 +121,7 @@ class Customers(object):
             self.bikes_owned.append(bike)
             bikeshop.inventory[bike] -= 1
             bikeshop.total_profit += bike.cost*bikeshop.margin
-            print("Thanks for purchasing the {} bicycle, {}!\nThe bike cost you {} and you have {} left in your bicycle fund."
-                  .format(bike.model, self.name, retail, self.money))
+            print("Thanks for purchasing the {} bicycle by {}, {}!\nThe bike cost you {} and you have {} left in your bicycle fund."
+                  .format(bike.model, bike.manufacturer, self.name, retail, self.money))
         else:
             print("Sorry! You can't afford this bike.")

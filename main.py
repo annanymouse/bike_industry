@@ -1,8 +1,9 @@
 """
 Refactoring bicycles.py
 """
+import random
 
-from bicycles import Bicycle, BikeShops, Customers, Wheels, Frames
+from bicycles import Bicycle, BikeShops, Customers, Wheels, Frames, BikeManufacturers
 
 def divider(title):
     print("*"*30)
@@ -10,6 +11,13 @@ def divider(title):
     print("*"*30)
 
 if __name__=="__main__":
+    # MANUFACTURERS
+    divider("Bike Manufacturers")
+    champion = BikeManufacturers("Champion", 0.05)
+    energy = BikeManufacturers("Energy", 0.03)
+    champion.print_details()
+    energy.print_details()
+    
     # WHEELS
     divider("Wheels Available")
     basic = Wheels(model="Basic", weight=5, cost=60)
@@ -27,18 +35,19 @@ if __name__=="__main__":
 
     # BIKES & BIKESHOP
     divider("Initial Inventory") 
-    cruiser = Bicycle(model="Cruiser", wheel=basic, frame=light)
-    beach_bum = Bicycle(model="Beach Bum", wheel=basic, frame=heavyduty)
-    city_slicker = Bicycle(model="City Slicker", wheel=premium, frame=light)
-    bruiser = Bicycle(model="Bruiser", wheel=premium, frame=heavyduty)
-    xtreme = Bicycle(model="Xtreme", wheel=allterrain, frame=light)
-    mad_max = Bicycle(model="Mad Max", wheel=allterrain, frame=heavyduty)
+    cruiser = Bicycle(model="Cruiser", wheel=basic, frame=light, manufacturer=champion)
+    beach_bum = Bicycle(model="Beach Bum", wheel=basic, frame=heavyduty, manufacturer=energy)
+    city_slicker = Bicycle(model="City Slicker", wheel=premium, frame=light, manufacturer=champion)
+    bruiser = Bicycle(model="Bruiser", wheel=premium, frame=heavyduty, manufacturer=energy)
+    xtreme = Bicycle(model="Xtreme", wheel=allterrain, frame=light, manufacturer=champion)
+    mad_max = Bicycle(model="Mad Max", wheel=allterrain, frame=heavyduty, manufacturer=energy)
     bike_list = [cruiser, beach_bum, city_slicker, bruiser, xtreme, mad_max]
-    royalbikes = BikeShops("Royal Bikes")
+    royalbikes = BikeShops("Royal Bikes", 200000)
+    royalbikes.budget_details()
     for bike in bike_list:
-        royalbikes.add_inventory(bike)
-    print(royalbikes)
-
+        royalbikes.add_inventory(bike, random.randint(5,25))
+    royalbikes.print_inventory()
+    royalbikes.budget_details()
 
     # CLIENTS
     curly = Customers("Curly", 200)
@@ -61,5 +70,5 @@ if __name__=="__main__":
 
     # BIKESHOP INVENTORY & PROFIT AFTER SALES
     divider("Inventory & Profit After Sales") 
-    print(royalbikes)
-    print(royalbikes.profit())
+    royalbikes.print_inventory()
+    royalbikes.profit()
